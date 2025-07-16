@@ -19,13 +19,16 @@
 # cond.sex =  a list with two elements with the same length. 
 
 
-# Author: Giorgio Arcara (2023) v 1.0
+# Author: Giorgio Arcara (2025) v 1.1
+
+# - changed sex to numeric to facilitate computed adj scores (that set sex to 0.5)
+
 
 
 sample.demo.cond = function(n,
                             age_values_t = seq(18, 90, 1), 
                             edu_values_t = c(5, 8, 13, 18, 20),
-                            sex_values_t = c("F", "M"), 
+                            sex_values_t = c(0, 1), 
                             cond.age.edu = list( 
                               list(c(18, 22), c(23, 40), c(41, 50), c(51, 60), c(61, 70), c(71, 80), c(81, 90)),
                               list(c(0,0,1,0,0), c(0, 0, 0.5, 0.3, 0.2), c(0, 0, 0.55, 0.30, 0.15), c(0, 0.2, 0.6, 0.1, 0.1),  

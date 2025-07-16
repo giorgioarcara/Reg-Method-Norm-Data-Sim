@@ -76,6 +76,9 @@ print(file_name)
 ### GET EMPIRICAL DISTRIBUTION OF DEMOGRAPHIC DATA
 demo.dat = read.csv(paste("Original_Data/", sample_demo_val,"_Dataset.csv", sep=""))
 
+demo.dat$Sex = as.numeric(demo.dat$Sex=="M")
+
+
 names(demo.dat)[grep("Age", names(demo.dat))]  = "age_values_o"
 names(demo.dat)[grep("Edu", names(demo.dat))]  = "edu_values_o"
 names(demo.dat)[grep("Sex", names(demo.dat))]  = "sex_values_o"

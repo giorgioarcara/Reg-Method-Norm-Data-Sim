@@ -9,13 +9,15 @@
 
 
 
-# Author: Giorgio Arcara (2023) v 1.0
+# Author: Giorgio Arcara (2025) v 1.1
+
+# - changed sex to numeric to facilitate computed adj scores (that set sex to 0.5)
 
 
 sample.demo.unif = function(n,
                             age_values_t = seq(18, 90, 1), 
                             edu_values_t = seq(5, 20, 1),
-                            sex_values_t = c("F", "M")){
+                            sex_values_t = c(0, 1)){
   
   age_values_o = sample(age_values_t, n, replace=T)
   edu_values_o = sample(edu_values_t, n, replace=T)
