@@ -31,13 +31,14 @@ adjscores_A2024 <- function(df = NULL, dep = "Dep", dep.range = c(0,30), age = "
   
   dat = na.omit(dat)
   
-  #
-  # if(!is.numeric(dat$sex)){
-  #dat$sex = factor(dat$sex)
-  
-  #dat$sex.n = ifelse(dat$sex==levels(dat$sex)[1], 1, 0)
-  #cat("Sex converted to numeric")
-  #}
+  # convert sex to numeric
+  if(!is.numeric(dat$sex)){
+    dat$sex = factor(dat$sex)
+    dat$sex.or = dat$sex
+    
+    dat$sex= ifelse(dat$sex==levels(dat$sex)[1], 1, 0)
+    #cat("Sex converted to numeric")
+  }
   
   #compute most common transformations for age and education
   cube = function(x){x^3}
@@ -118,11 +119,21 @@ adjscores_A2024 <- function(df = NULL, dep = "Dep", dep.range = c(0,30), age = "
     best_edu_transf = "zero"
   }
   
+  # CAPITANI'S REGRESSION METHOD END HERE
+  # predict mean value to calculate adjusted score in Capitani's way.
+  age_m = mean(dat$age)
+  edu_m = mean(dat$edu)
+  sex_m = 0.5
+  mean_dat = data.frame(age=age_m, edu=edu_m, sex=sex_m)
+  names(mean_dat)=c(age, edu, sex) # to restore correct name
+  mean_value = predict(mod_final, newdata=mean_dat)
   
-  dat$ADJ_SCORES = residuals(mod_final)+coef(mod_final)["(Intercept)"]
+  dat$ADJ_SCORES = residuals(mod_final)+mean_value
   dat$RESIDUALS = residuals(mod_final)
   
   # uncorrect data above/equal maximum or below/equal minimum value
+  dat[dat[, dep]>=dep.range[2], "ADJ_SCORES"] = dep.range[2]
+  dat[dat[, dep]<=dep.range[1], "ADJ_SCORES"] = dep.range[1]
   dat[dat$ADJ_SCORES>=dep.range[2], "ADJ_SCORES"] = dep.range[2]
   dat[dat$ADJ_SCORES<=dep.range[1], "ADJ_SCORES"] = dep.range[1]
   
