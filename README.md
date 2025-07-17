@@ -28,7 +28,8 @@ The folder is structured as follow:
   * `Analysis5`: compare the performance of different versions of the two methods (see Supplementary Materials for details available at https://osf.io/yma69/).
   * `DEMO`: contains some demo of the comparisons between method and of the simulaton of normative data.
   * `OTHERS`: contains other miscellaneous scripts.
-* `Results`: the folder is empty, but it will contains the `.RData` files containing the results of the simulations. The results will have a fairy large size (about 30 Gb), so take this into account before launching the code of the stimulation.
+
+**NOTE**: For the code to run properly, you need two additional folders: `Results` and `Figures`. These folders are created when you run any of the `STEP0_...` scripts.
 
 ## INSTRUCTIONS
 
