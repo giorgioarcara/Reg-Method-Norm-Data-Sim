@@ -142,23 +142,24 @@ adjscores_C1987 <- function(df = NULL, dep = "Dep", dep.range = c(0,30), age = "
   
   
   ####
-  # CAPITANI'S REGRESSION METHOD END HERE
-  # predict mean value to calculate adjusted score in Capitani's way.
-  age_m = mean(dat$age)
-  edu_m = mean(dat$edu)
+  if (length(grep(sex, names(coef(mod_final)))) == 0){
+    best_sex_transf = "zero"
+  } else {best_sex_transf = "identity"}
+  
+  
+  # predict mean value to calculate adjusted score capitani way.
+  age_m = mean(best_age_funct(dat$age))
+  edu_m = mean(best_edu_funct(dat$edu))
   sex_m = 0.5
-  mean_dat = data.frame(age=age_m, edu=edu_m, sex=sex_m)
-  names(mean_dat)=c(age, edu, sex) # to restore correct name
-  mean_value = predict(mod_final, newdata=mean_dat)
   
-  dat$ADJ_SCORES = residuals(mod_final)+mean_value
+  coefs = coef(summary(mod_final))
+  age_coef = ifelse(any(grepl(age, rownames(coefs))), coefs[grepl(age, rownames(coefs)), 1], 0)
+  edu_coef = ifelse(any(grepl(edu, rownames(coefs))), coefs[grepl(edu, rownames(coefs)), 1], 0)
+  sex_coef = ifelse(any(grepl(sex, rownames(coefs))), coefs[grepl(sex, rownames(coefs)), 1], 0)
+  
+  dat$ADJ_SCORES = dat[,dep] -(age_coef)*(best_age_funct(dat[,age])-age_m) - edu_coef*(best_edu_funct(dat[,edu])-edu_m) -sex_coef*(dat$sex-0.5) # Note it use "sex" cause it is numeric
+  
   dat$RESIDUALS = residuals(mod_final)
-  
-  # uncorrect data above/equal maximum or below/equal minimum value
-  dat[dat[, dep]>=dep.range[2], "ADJ_SCORES"] = dep.range[2]
-  dat[dat[, dep]<=dep.range[1], "ADJ_SCORES"] = dep.range[1]
-  dat[dat$ADJ_SCORES>=dep.range[2], "ADJ_SCORES"] = dep.range[2]
-  dat[dat$ADJ_SCORES<=dep.range[1], "ADJ_SCORES"] = dep.range[1]
   
   # NOTA GIORGIO : adjust the output: return regression and return new dataset
   # not strictly necessary for simulation, necessary for using the code
